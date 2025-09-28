@@ -42,11 +42,19 @@ app.post('/webhook', (req, res) => {
   if (!changes || changes.length === 0) return res.status(200).end();
 
   const messages = changes[0].value.messages;
+  
   if (messages && messages.length > 0) {
     messages.forEach(msg => {
       if (msg.type === 'image') {
         replyMessage(msg.from, msg.id);
-      }
+      } else if (msg.type === 'button') {
+        if (msg.button.payload === 'Confirmar') {
+          SendMessage(msg.from, 'Dados confirmados! Obrigado.');
+        }
+      } else if (msg.type === 'text') {
+          //const texto = msg.text.body.toLowerCase();
+          SendMessage(msg.from, 'Dados corrigidos recebido! Obrigado.');
+        }
     });
   }
 
@@ -66,7 +74,7 @@ async function SendMessage(deliveryTo, message) {
         messaging_product: "whatsapp",
         to: deliveryTo,
         type: "text",
-        text: { body: message || "Olá, envio de mensagem funcionando!" }
+        text: { body: message }
       }
     });
   } catch (err) {
@@ -74,7 +82,7 @@ async function SendMessage(deliveryTo, message) {
   }
 }
 
-// Função para responder com template
+// Função para responder com o template
 async function replyMessage(deliveryTo, messageId) {
   const body = {
     cnpj_cpf: "18288049000157",
