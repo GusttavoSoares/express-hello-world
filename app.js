@@ -42,7 +42,7 @@ app.post('/webhook', (req, res) => {
   if (!changes || changes.length === 0) return res.status(200).end();
 
   const messages = changes[0].value.messages;
-  
+
   if (messages && messages.length > 0) {
     messages.forEach(msg => {
       if (msg.type === 'image') {
@@ -51,9 +51,9 @@ app.post('/webhook', (req, res) => {
         if (msg.button.payload === 'Confirmar') {
           SendMessage(msg.from, 'Dados confirmados! Obrigado.');
         }
-      } else if (msg.type === 'text') {
+      } else if (msg.type === 'text' && msg.text.body.toLowerCase().includes('fornecedor')) {
           //const texto = msg.text.body.toLowerCase();
-          SendMessage(msg.from, 'Dados corrigidos recebido! Obrigado.');
+          SendMessage(msg.from, 'Dados corrigidos recebidos! Obrigado.');
         }
     });
   }
