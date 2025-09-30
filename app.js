@@ -1,11 +1,11 @@
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
+import axios from 'axios';
+import express from 'express';
+import dotenv from 'dotenv';
 
-const crypto = require("crypto");
-const axios = require('axios'); 
-const express = require('express');
-
-require('dotenv').config();
+dotenv.config();
 
 const META_ACCESS_TOKEN = process.env.META_ACCESS_TOKEN;
 const META_PHONE_ID = process.env.META_PHONE_ID;
