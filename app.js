@@ -52,12 +52,12 @@ app.post('/flow', async  (req, res) => {
 
   // Return the next screen & data to the client
   const screenData = {
-      CONFIRM_PAYMENT: {
+    CONFIRM_PAYMENT: {
       screen: "CONFIRM_PAYMENT",
       data: {
         fornecedor: "Fornecedor Exemplo",
-        data_emissao: "29/09/2025",
-        data_vencimento: "29/10/2025",
+        data_emissao: "29\/09\/2025", // Add escaped slashes
+        data_vencimento: "29\/10\/2025", // Add escaped slashes
         valor_original: "1000",
         descontos: "50",
         descricao: "Pagamento referente a serviços",
@@ -66,7 +66,6 @@ app.post('/flow', async  (req, res) => {
       }
     }
   };
-
 
   res.send(encryptResponse(screenData, aesKeyBuffer, initialVectorBuffer));
 });
