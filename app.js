@@ -13,7 +13,6 @@ const PRIVATE_KEY_PATH = '/etc/secrets/private.pem';
 
 const PRIVATE_KEY = crypto.createPrivateKey({
   key: fs.readFileSync(PRIVATE_KEY_PATH, 'utf8'),
-  passphrase: process.env.PRIVATE_KEY_PASSPHRASE, // senha usada para gerar a chave
 });
 
 // Import Express.js
