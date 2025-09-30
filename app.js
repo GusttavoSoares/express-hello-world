@@ -74,13 +74,13 @@ const decryptRequest = (body, privatePem) => {
 
   const decryptedAesKey = crypto.privateDecrypt(
     {
-      key: crypto.createPrivateKey(privatePem),
+      key: PRIVATE_KEY,       
       padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
       oaepHash: 'sha256',
     },
-    Buffer.from(encrypted_aes_key, "base64"),
+    Buffer.from(encrypted_aes_key, "base64")
   );
-    
+
   const flowDataBuffer = Buffer.from(encrypted_flow_data, "base64");
   const initialVectorBuffer = Buffer.from(initial_vector, "base64");
 
