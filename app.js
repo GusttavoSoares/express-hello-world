@@ -56,11 +56,11 @@ app.post('/flow', async  (req, res) => {
       screen: "CONFIRM_PAYMENT",
       data: {
         fornecedor: "Fornecedor Exemplo",
-        data_emissao: "29\/09\/2025", // Add escaped slashes
-        data_vencimento: "29\/10\/2025", // Add escaped slashes
+        data_emissao: "2025",
+        data_vencimento: "2025",
         valor_original: "1000",
         descontos: "50",
-        descricao: "Pagamento referente a serviços",
+        descricao: "Pagamento referente a servicos",
         tipo_documento: "Boleto",
         numero_documento: "12345"
       }
