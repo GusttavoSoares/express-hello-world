@@ -11,7 +11,10 @@ const META_ACCESS_TOKEN = process.env.META_ACCESS_TOKEN;
 const META_PHONE_ID = process.env.META_PHONE_ID;
 const PRIVATE_KEY_PATH = '/etc/secrets/private.pem';
 
-const PRIVATE_KEY = fs.readFileSync(PRIVATE_KEY_PATH, 'utf8');
+const PRIVATE_KEY = crypto.createPrivateKey({
+  key: fs.readFileSync(PRIVATE_KEY_PATH, 'utf8'),
+  passphrase: process.env.PRIVATE_KEY_PASSPHRASE, // senha usada para gerar a chave
+});
 
 // Import Express.js
 
