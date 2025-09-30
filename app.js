@@ -52,18 +52,16 @@ app.post('/flow', async  (req, res) => {
 
   // Return the next screen & data to the client
   const screenData = {
-    CONFIRM_PAYMENT: {
-      screen: "CONFIRM_PAYMENT",
-      data: {
-        fornecedor: "Fornecedor Exemplo",
-        data_emissao: "29/09/2025",
-        data_vencimento: "29/10/2025",
-        valor_original: "1000",
-        descontos: "50",
-        descricao: "Pagamento referente a servi\u00e7os",
-        tipo_documento: "Boleto",
-        numero_documento: "12345"
-      }
+    screen: "CONFIRM_PAYMENT",
+    data: {
+      fornecedor: "Fornecedor Exemplo",
+      data_emissao: "29/09/2025",
+      data_vencimento: "29/10/2025",
+      valor_original: "1000",
+      descontos: "50",
+      descricao: "Pagamento referente a serviços",
+      tipo_documento: "Boleto",
+      numero_documento: "12345"
     }
   };
 
