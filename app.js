@@ -51,21 +51,23 @@ app.post('/flow', async  (req, res) => {
   const { screen, data, version, action } = decryptedBody;
 
   // Return the next screen & data to the client
-  const screenData = {
-    CONFIRM_PAYMENT: {
-      screen: "CONFIRM_PAYMENT",
-      data: {
-        fornecedor: "Fornecedor Exemplo",
-        data_emissao: "2025",
-        data_vencimento: "2025",
-        valor_original: "1000",
-        descontos: "50",
-        descricao: "Pagamento referente a servicos",
-        tipo_documento: "Boleto",
-        numero_documento: "12345"
-      }
-    }
-  };
+  // const screenData = {
+  //   CONFIRM_PAYMENT: {
+  //     screen: "CONFIRM_PAYMENT",
+  //     data: {
+  //       fornecedor: "Fornecedor Exemplo",
+  //       data_emissao: "2025",
+  //       data_vencimento: "2025",
+  //       valor_original: "1000",
+  //       descontos: "50",
+  //       descricao: "Pagamento referente a servicos",
+  //       tipo_documento: "Boleto",
+  //       numero_documento: "12345"
+  //     }
+  //   }
+  // };
+
+  const screenData = { data: { status: "active" } };
 
   res.send(encryptResponse(screenData, aesKeyBuffer, initialVectorBuffer));
 });
