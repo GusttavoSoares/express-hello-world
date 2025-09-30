@@ -1,11 +1,19 @@
-require('dotenv').config();
-const axios = require('axios'); 
+import fs from 'fs';
+import path from 'path';
 
-const meta_access_token = process.env.META_ACCESS_TOKEN;
-const meta_phone_id = process.env.META_PHONE_ID;
+const crypto = require("crypto");
+const axios = require('axios'); 
+const express = require('express');
+
+require('dotenv').config();
+
+const META_ACCESS_TOKEN = process.env.META_ACCESS_TOKEN;
+const META_PHONE_ID = process.env.META_PHONE_ID;
+const PRIVATE_KEY_PATH = '/etc/secrets/private.pem';
+
+const PRIVATE_KEY = fs.readFileSync(PRIVATE_KEY_PATH, 'utf8');
 
 // Import Express.js
-const express = require('express');
 
 // Create an Express app
 const app = express();
@@ -32,10 +40,91 @@ app.get('/webhook', (req, res) => {
 // Route for POST requests
 
 // para receber os dados do flow de pagamento
-app.post('/flow', (req, res) => {
-  console.log("dados do flow", req.body);
-  res.status(200).end();
+app.post('/flow', async  (req, res) => {
+  const { decryptedBody, aesKeyBuffer, initialVectorBuffer } = decryptRequest(
+    req.body,
+    PRIVATE_KEY,
+  );
+
+  const { screen, data, version, action } = decryptedBody;
+
+  // Return the next screen & data to the client
+  const screenData = {
+    screen: "CONFIRM_PAYMENT",
+    data: {
+      fornecedor: "Fornecedor Exemplo",
+      data_emissao: "29/09/2025",
+      data_vencimento: "29/10/2025",
+      valor_original: "1000",
+      descontos: "50",
+      descricao: "Pagamento referente a serviços",
+      tipo_documento: "Boleto",
+      numero_documento: "12345"
+    },
+  };
+
+  res.send(encryptResponse(screenData, aesKeyBuffer, initialVectorBuffer));
 });
+
+const decryptRequest = (body, privatePem) => {
+  const { encrypted_aes_key, encrypted_flow_data, initial_vector} = body;
+
+  const decryptedAesKey = crypto.privateDecrypt(
+    {
+      key: crypto.createPrivateKey(privatePem),
+      padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+      oaepHash: 'sha256',
+    },
+    Buffer.from(encrypted_aes_key, "base64"),
+  );
+    
+  const flowDataBuffer = Buffer.from(encrypted_flow_data, "base64");
+  const initialVectorBuffer = Buffer.from(initial_vector, "base64");
+
+  const TAG_LENGTH = 16;
+  const encrypted_flow_data_body = flowDataBuffer.subarray(0, -TAG_LENGTH);
+  const encrypted_flow_data_tag = flowDataBuffer.subarray(-TAG_LENGTH);
+
+  const decipher = crypto.createDecipheriv(
+    "aes-128-gcm",
+    decryptedAesKey,
+    initialVectorBuffer,
+  );
+  decipher.setAuthTag(encrypted_flow_data_tag);
+
+  const decryptedJSONString = Buffer.concat([
+    decipher.update(encrypted_flow_data_body),
+    decipher.final(),
+  ]).toString("utf-8");
+
+  return {
+    decryptedBody: JSON.parse(decryptedJSONString),
+    aesKeyBuffer: decryptedAesKey,
+    initialVectorBuffer,
+  };
+};
+
+const encryptResponse = (
+  response,
+  aesKeyBuffer,
+  initialVectorBuffer,
+) => {
+  const flipped_iv = [];
+  for (const pair of initialVectorBuffer.entries()) {
+    flipped_iv.push(~pair[1]);
+  }
+
+  const cipher = crypto.createCipheriv(
+    "aes-128-gcm",
+    aesKeyBuffer,
+    Buffer.from(flipped_iv),
+  );
+  return Buffer.concat([
+    cipher.update(JSON.stringify(response), "utf-8"),
+    cipher.final(),
+    cipher.getAuthTag(),
+  ]).toString("base64");
+};
 
 app.post('/webhook', (req, res) => {
   const timestamp = new Date().toISOString().replace('T', ' ').slice(0, 19);
@@ -72,9 +161,9 @@ async function SendMessage(deliveryTo, message) {
   try {
     await axios({
       method: 'post',
-      url: `https://graph.facebook.com/v23.0/${meta_phone_id}/messages`,
+      url: `https://graph.facebook.com/v23.0/${META_PHONE_ID}/messages`,
       headers: {
-        'Authorization': `Bearer ${meta_access_token}`,
+        'Authorization': `Bearer ${META_ACCESS_TOKEN}`,
         'Content-Type': 'application/json'
       },
       data: {
@@ -105,9 +194,9 @@ async function replyMessage(deliveryTo, messageId) {
   try {
     await axios({
       method: 'post',
-      url: `https://graph.facebook.com/v23.0/${meta_phone_id}/messages`,
+      url: `https://graph.facebook.com/v23.0/${META_PHONE_ID}/messages`,
       headers: {
-        'Authorization': `Bearer ${meta_access_token}`,
+        'Authorization': `Bearer ${META_ACCESS_TOKEN}`,
         'Content-Type': 'application/json'
       },
       data: {
