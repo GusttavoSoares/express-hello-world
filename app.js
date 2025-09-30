@@ -30,6 +30,13 @@ app.get('/webhook', (req, res) => {
 });
 
 // Route for POST requests
+
+// para receber os dados do flow de pagamento
+app.post('/flow', (req, res) => {
+  console.log("dados do flow", req.body);
+  res.status(200).end();
+});
+
 app.post('/webhook', (req, res) => {
   const timestamp = new Date().toISOString().replace('T', ' ').slice(0, 19);
   console.log(`\n\nWebhook received ${timestamp}\n`);
