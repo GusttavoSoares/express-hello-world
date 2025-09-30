@@ -73,11 +73,7 @@ const decryptRequest = (body, privatePem) => {
   const { encrypted_aes_key, encrypted_flow_data, initial_vector} = body;
 
   const decryptedAesKey = crypto.privateDecrypt(
-    {
-      key: PRIVATE_KEY,       
-      padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-      oaepHash: 'sha256',
-    },
+    PRIVATE_KEY,
     Buffer.from(encrypted_aes_key, "base64")
   );
 
