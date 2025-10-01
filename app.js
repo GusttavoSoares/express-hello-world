@@ -242,10 +242,10 @@ async function send_flow(deliveryTo) {
           action: {
             name: "flow",
             parameters: {
-              flow_name: "extracao_de_pagamentoo",
-              flow_cta: "Book!",
               flow_message_version: "3",
-              flow_token: "<FLOW_EXTRACAO_PAGAMENTO_TOKEN>",
+              flow_token: FLOW_EXTRACAO_PAGAMENTO_TOKEN,
+              flow_name: "flow_pagamento",
+              flow_cta: "Book!",
               flow_action: "navigate",
               flow_action_payload: flow_action_payload
             }
