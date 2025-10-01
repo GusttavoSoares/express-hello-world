@@ -231,13 +231,13 @@ async function replyMessage(deliveryTo, messageId) {
             {
               type: "button",
               sub_type: "quick_reply",
-              index: 0,
+              index: "0",
               parameters: [{ type: "payload", payload: "Confirmar" }]
             },
             {
               type: "button",
               sub_type: "flow",
-              index: 1,
+              index: "1",
               parameters: [
                 { 
                   type: "action", 
