@@ -226,23 +226,38 @@ async function send_flow(deliveryTo, messageId) {
         'Authorization': `Bearer ${META_ACCESS_TOKEN}`,
         'Content-Type': 'application/json'
       },
-      data: {
+     data: {
         messaging_product: "whatsapp",
+        recipient_type: "individual",
         to: deliveryTo,
-        type: "interactive",
-        interactive: {
-          type: "flow",
-          flow: {
-            flow_token: FLOW_EXTRACAO_PAGAMENTO_TOKEN,
-            flow_action_data: flow_action_data
-          }
+        type: "template",
+        template: {
+          name: "extracao_de_pagamento",  // nome do seu template aprovado
+          language: { code: "pt_BR" },
+          components: [
+            {
+              type: "button",
+              sub_type: "flow",
+              index: "0",
+              parameters: [
+                {
+                  type: "action",
+                  action: {
+                    flow_token: FLOW_EXTRACAO_PAGAMENTO_TOKEN,
+                    flow_action_data: flow_action_data
+                  }
+                }
+              ]
+            }
+          ]
         },
-        context: { message_id: messageId }
+        context: { message_id: messageId } // opcional, se estiver respondendo a uma mensagem
       }
     });
-    console.log('Flow enviado com sucesso!');
+
+    console.log('Template com flow enviado com sucesso!');
   } catch (err) {
-    console.error('Erro ao enviar flow:', err.response?.data || err.message);
+    console.error('Erro ao enviar template com flow:', err.response?.data || err.message);
   }
 }
 
