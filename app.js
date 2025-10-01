@@ -207,16 +207,18 @@ async function send_flow(deliveryTo) {
     document_number: "88723",
   };
 
-  // Esses dados serão passados ao flow
-  const flow_action_data = {
-    fornecedor: body.cnpj_cpf,
-    data_emissao: body.emission_date,
-    data_vencimento: body.expiration_date,
-    valor_original: body.original_value.toString(),
-    descontos: body.discount_value.toString(),
-    descricao: body.description,
-    tipo_documento: body.document_type,
-    numero_documento: body.document_number
+  const flow_action_payload = {
+    screen: "SUCCESS",
+    data: {
+      fornecedor: body.cnpj_cpf,
+      data_emissao: body.emission_date,
+      data_vencimento: body.expiration_date,
+      valor_original: body.original_value.toString(),
+      descontos: body.discount_value.toString(),
+      descricao: body.description,
+      tipo_documento: body.document_type,
+      numero_documento: body.document_number
+    }
   };
 
   try {
@@ -228,40 +230,34 @@ async function send_flow(deliveryTo) {
         'Content-Type': 'application/json'
       },
       data: {
+        recipient_type: "individual",
         messaging_product: "whatsapp",
         to: deliveryTo,
         type: "interactive",
         interactive: {
-          type: "button",
-          body: {
-            text: "Deseja confirmar o pagamento?"
-          },
+          type: "flow",
+          header: { type: "text", text: "Confirmação de Pagamento" },
+          body: { text: "Segue os dados do pagamento:" },
+          footer: { text: "Clique abaixo para abrir o flow" },
           action: {
-            buttons: [
-              {
-                type: "flow",
-                title: "Abrir Flow",
-                flow: {
-                  flow_token: FLOW_EXTRACAO_PAGAMENTO_TOKEN,
-                  flow_data: flow_action_data
-                }
-              },
-              {
-                type: "reply",
-                title: "Cancelar",
-                id: "cancelar"
-              }
-            ]
+            name: "flow",
+            parameters: {
+              flow_message_version: "3",
+              flow_token: "<FLOW_EXTRACAO_PAGAMENTO_TOKEN>",
+              flow_action: "navigate",
+              flow_action_payload: flow_action_payload
+            }
           }
         }
       }
     });
 
-    console.log('Mensagem interativa com flow enviada com sucesso!');
+    console.log('Flow interativo enviado com sucesso!');
   } catch (err) {
-    console.error('Erro ao enviar mensagem interativa com flow:', err.response?.data || err.message);
+    console.error('Erro ao enviar flow interativo:', err.response?.data || err.message);
   }
 }
+
 
 
 
