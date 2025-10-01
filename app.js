@@ -208,7 +208,7 @@ async function send_flow(deliveryTo) {
   };
 
   const flow_action_payload = {
-    screen: "SUCCESS",
+    screen: "CONFIRM_PAYMENT",
     data: {
       fornecedor: body.cnpj_cpf,
       data_emissao: body.emission_date,
