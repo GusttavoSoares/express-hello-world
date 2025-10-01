@@ -201,7 +201,7 @@ async function SendMessage(deliveryTo, message) {
 }
 
 async function send_flow(deliveryTo) {
-  const body = {
+ const body = {
     cnpj_cpf: "18288049000157",
     emission_date: "24/09/2025",
     expiration_date: "24/09/2026",
@@ -214,19 +214,14 @@ async function send_flow(deliveryTo) {
 
   const flow_action_payload = {
     screen: "CONFIRM_PAYMENT",
-    // Renomeamos 'data' para 'params' para que o Flow
-    // consiga acessar os valores via ${params.<nome_da_variavel>}
-    params: { 
-      fornecedor: body.cnpj_cpf,
-      data_emissao: body.emission_date,
-      data_vencimento: body.expiration_date,
-      // Garanta que valores numéricos sejam strings, como você já fez
-      valor_original: body.original_value.toString(),
-      descontos: body.discount_value.toString(), 
-      descricao: body.description,
-      tipo_documento: body.document_type,
-      numero_documento: body.document_number
-    }
+    fornecedor: body.cnpj_cpf,
+    data_emissao: body.emission_date,
+    data_vencimento: body.expiration_date,
+    valor_original: body.original_value.toString(),
+    descontos: body.discount_value.toString(),
+    descricao: body.description,
+    tipo_documento: body.document_type,
+    numero_documento: body.document_number
   };
 
   try {
