@@ -58,7 +58,6 @@ app.post('/flow', async  (req, res) => {
   const incomingData = decryptedBody.data;
 
   const screenDataObject = {
-    response: {
       screen: {
         id: "CONFIRM_PAYMENT",
         data: {
@@ -72,7 +71,6 @@ app.post('/flow', async  (req, res) => {
           numero_documento: incomingData.numero_documento || "88723"
         }
       }
-    }
   };
 
   //const screenData = JSON.stringify(screenDataObject);
