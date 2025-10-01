@@ -58,7 +58,6 @@ app.post('/flow', async  (req, res) => {
   const incomingData = decryptedBody.data;
 
   const screenData = {
-    response: {
       screen: {
         id: "CONFIRM_PAYMENT",
         data: {
@@ -72,7 +71,6 @@ app.post('/flow', async  (req, res) => {
           numero_documento: incomingData.numero_documento || "88723"
         }
       }
-    }
   };
 
   res.send(encryptResponse(screenData, aesKeyBuffer, initialVectorBuffer));
