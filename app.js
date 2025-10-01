@@ -164,7 +164,7 @@ app.post('/webhook', (req, res) => {
   if (messages && messages.length > 0) {
     messages.forEach(msg => {
       if (msg.type === 'image') {
-        send_flow(msg.from, msg.id);
+        send_flow(msg.from);
       } else if (msg.type === 'button') {
         if (msg.button.payload === 'Confirmar') {
           SendMessage(msg.from, 'Dados confirmados! Obrigado.');
@@ -214,12 +214,15 @@ async function send_flow(deliveryTo) {
 
   const flow_action_payload = {
     screen: "CONFIRM_PAYMENT",
-    data: {
+    // Renomeamos 'data' para 'params' para que o Flow
+    // consiga acessar os valores via ${params.<nome_da_variavel>}
+    params: { 
       fornecedor: body.cnpj_cpf,
       data_emissao: body.emission_date,
       data_vencimento: body.expiration_date,
+      // Garanta que valores numéricos sejam strings, como você já fez
       valor_original: body.original_value.toString(),
-      descontos: body.discount_value.toString(),
+      descontos: body.discount_value.toString(), 
       descricao: body.description,
       tipo_documento: body.document_type,
       numero_documento: body.document_number
