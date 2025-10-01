@@ -49,9 +49,14 @@ app.post('/flow', async  (req, res) => {
     PRIVATE_KEY,
   );
 
+  if (!decryptedBody.data) {
+    const healthResponse = { data: { status: "active" } };
+    return res.send(encryptResponse(healthResponse, aesKeyBuffer, initialVectorBuffer));
+  }
+
   //const { screen, data, version, action } = decryptedBody;
-  const incomingData = decryptedBody.data || {};
-  
+  const incomingData = decryptedBody.data;
+
   const screenData = {
     response: {
       screen: {
