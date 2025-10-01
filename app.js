@@ -159,7 +159,7 @@ app.post('/webhook', (req, res) => {
   if (messages && messages.length > 0) {
     messages.forEach(msg => {
       if (msg.type === 'image') {
-        replyMessage(msg.from, msg.id);
+        send_flow(msg.from, msg.id);
       } else if (msg.type === 'button') {
         if (msg.button.payload === 'Confirmar') {
           SendMessage(msg.from, 'Dados confirmados! Obrigado.');
@@ -194,6 +194,58 @@ async function SendMessage(deliveryTo, message) {
     console.error('Erro ao enviar mensagem:', err.response?.data || err.message);
   }
 }
+
+async function send_flow(deliveryTo, messageId) {
+  const body = {
+    cnpj_cpf: "18288049000157",
+    emission_date: "24/09/2025",
+    expiration_date: "24/09/2026",
+    original_value: 550,
+    discount_value: 50,
+    description: "Exemplo de descrição",
+    document_type: "Boleto Bancário",
+    document_number: "88723",
+  };
+
+  const flow_action_data = {
+  fornecedor: body.cnpj_cpf,
+  data_emissao: body.emission_date,
+  data_vencimento: body.expiration_date,
+  valor_original: body.original_value.toString(),
+  descontos: body.discount_value.toString(),
+  descricao: body.description,
+  tipo_documento: body.document_type,
+  numero_documento: body.document_number
+};
+
+    try {
+    await axios({
+      method: 'post',
+      url: `https://graph.facebook.com/v23.0/${META_PHONE_ID}/messages`,
+      headers: {
+        'Authorization': `Bearer ${META_ACCESS_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      data: {
+        messaging_product: "whatsapp",
+        to: deliveryTo,
+        type: "interactive",
+        interactive: {
+          type: "flow",
+          flow: {
+            flow_token: FLOW_EXTRACAO_PAGAMENTO_TOKEN,
+            flow_action_data: flow_action_data
+          }
+        },
+        context: { message_id: messageId }
+      }
+    });
+    console.log('Flow enviado com sucesso!');
+  } catch (err) {
+    console.error('Erro ao enviar flow:', err.response?.data || err.message);
+  }
+}
+
 
 // Função para responder com o template
 async function replyMessage(deliveryTo, messageId) {
