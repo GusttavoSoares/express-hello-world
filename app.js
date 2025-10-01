@@ -244,14 +244,14 @@ async function replyMessage(deliveryTo, messageId) {
                   action: { 
                     flow_token: FLOW_EXTRACAO_PAGAMENTO_TOKEN, 
                     flow_action_data: {
-                      cnpj_cpf: body.cnpj_cpf,
-                      emission_date: body.emission_date,
-                      expiration_date: body.expiration_date,
-                      original_value: body.original_value.toString(),
-                      discount_value: body.discount_value.toString(),
-                      description: body.description,
-                      document_type: body.document_type,
-                      document_number: body.document_number
+                      fornecedor: body.cnpj_cpf,
+                      data_emissao: body.emission_date,
+                      data_vencimento: body.expiration_date,
+                      valor_original: body.original_value.toString(),
+                      descontos: body.discount_value.toString(),
+                      descricao: body.description,
+                      tipo_documento: body.document_type,
+                      numero_documento: body.document_number
                     }
                   }
                 }
