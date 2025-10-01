@@ -226,6 +226,12 @@ async function replyMessage(deliveryTo, messageId) {
                 { type: "text", text: body.document_type },
                 { type: "text", text: body.document_number }
               ]
+            },
+            {
+              type: "button",
+              sub_type: "quick_reply",
+              index: 0,
+              parameters: [{ type: "payload", payload: "Confirmar" }]
             }
           ]
         },
