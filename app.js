@@ -238,7 +238,7 @@ async function replyMessage(deliveryTo, messageId) {
               type: "button",
               sub_type: "flow",
               index: 1,
-              parameters: [{ type: "action", action: { flow_token: FLOW_EXTRACAO_PAGAMENTO_TOKEN, flow_action_data: {} } }]
+              parameters: [{ type: "action", action: { flow_token: FLOW_EXTRACAO_PAGAMENTO_TOKEN, flow_action_data: { body } } }]
             }
           ]
         },
