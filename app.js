@@ -148,6 +148,17 @@ app.post('/webhook', (req, res) => {
   console.log(`\n\nWebhook received ${timestamp}\n`);
   console.log(JSON.stringify(req.body, null, 2));
 
+  const body = req.body;
+
+  const flowData = body?.entry?.[0]?.changes?.[0]?.value?.flows?.[0]?.data?.params;
+
+  if (flowData) {
+    console.log("Dados preenchidos pelo usuário:", flowData);
+  } else {
+    console.log("Nenhum flow recebido");
+  }
+  
+
   const entry = req.body.entry;
   if (!entry || entry.length === 0) return res.status(200).end();
 
@@ -209,6 +220,7 @@ async function send_flow(deliveryTo) {
 
   const flow_action_payload = {
     screen: "CONFIRM_PAYMENT",
+    data: {
       fornecedor: body.cnpj_cpf,
       data_emissao: body.emission_date,
       data_vencimento: body.expiration_date,
@@ -217,6 +229,7 @@ async function send_flow(deliveryTo) {
       descricao: body.description,
       tipo_documento: body.document_type,
       numero_documento: body.document_number
+    }
   };
 
   try {
