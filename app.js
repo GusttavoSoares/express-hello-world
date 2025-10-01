@@ -264,7 +264,8 @@ console.log(flow_action_data);
           type: "action",
           action: {
             flow_token: FLOW_EXTRACAO_PAGAMENTO_TOKEN,
-            flow_action_data: flow_action_data
+            flow_action_data: flow_action_data,
+            flow_action: "data_exchange"
           }
         }
       ]
