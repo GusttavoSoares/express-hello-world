@@ -218,6 +218,7 @@ async function send_flow(deliveryTo, messageId) {
   numero_documento: body.document_number
 };
 
+console.log(flow_action_data);
     try {
     await axios({
       method: 'post',
@@ -250,8 +251,14 @@ async function send_flow(deliveryTo, messageId) {
     },
     {
       type: "button",
-      sub_type: "flow",
+      sub_type: "quick_reply",
       index: "0",
+      parameters: [{ type: "payload", payload: "Confirmar" }]
+    },
+    {
+      type: "button",
+      sub_type: "flow",
+      index: "1",
       parameters: [
         {
           type: "action",
