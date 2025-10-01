@@ -232,27 +232,40 @@ async function send_flow(deliveryTo, messageId) {
         to: deliveryTo,
         type: "template",
         template: {
-          name: "extracao_de_pagamento",  // nome do seu template aprovado
-          language: { code: "pt_BR" },
-          components: [
-            {
-              type: "button",
-              sub_type: "flow",
-              index: "0",
-              parameters: [
-                {
-                  type: "action",
-                  action: {
-                    flow_token: FLOW_EXTRACAO_PAGAMENTO_TOKEN,
-                    flow_action_data: flow_action_data
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        context: { message_id: messageId } // opcional, se estiver respondendo a uma mensagem
-      }
+  name: "extracao_de_pagamento",
+  language: { code: "pt_BR" },
+  components: [
+    {
+      type: "body",
+      parameters: [
+        { type: "text", text: body.cnpj_cpf },           
+        { type: "text", text: body.emission_date },     
+        { type: "text", text: body.expiration_date },  
+        { type: "text", text: body.original_value.toString() }, 
+        { type: "text", text: body.discount_value.toString() }, 
+        { type: "text", text: body.description },        
+        { type: "text", text: body.document_type },      
+        { type: "text", text: body.document_number } 
+      ]
+    },
+    {
+      type: "button",
+      sub_type: "flow",
+      index: "0",
+      parameters: [
+        {
+          type: "action",
+          action: {
+            flow_token: FLOW_EXTRACAO_PAGAMENTO_TOKEN,
+            flow_action_data: flow_action_data
+          }
+        }
+      ]
+    }
+  ]
+},
+context: { message_id: messageId } // opcional, se estiver respondendo a uma mensagem
+    }
     });
 
     console.log('Template com flow enviado com sucesso!');
