@@ -240,20 +240,25 @@ async function replyMessage(deliveryTo, messageId) {
               index: 1,
               parameters: [
                 { 
-                type: "action", 
-                action: { 
-                  flow_token: FLOW_EXTRACAO_PAGAMENTO_TOKEN, 
-                  flow_action_data: {
-                    ...body, 
-                    original_value: body.original_value.toString(), 
-                    discount_value: body.discount_value.toString() 
-                  } 
-                } 
-              }
-            ]
-          }
-        ]
-      },
+                  type: "action", 
+                  action: { 
+                    flow_token: FLOW_EXTRACAO_PAGAMENTO_TOKEN, 
+                    flow_action_data: {
+                      cnpj_cpf: body.cnpj_cpf,
+                      emission_date: body.emission_date,
+                      expiration_date: body.expiration_date,
+                      original_value: body.original_value.toString(),
+                      discount_value: body.discount_value.toString(),
+                      description: body.description,
+                      document_type: body.document_type,
+                      document_number: body.document_number
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
         context: { message_id: messageId }
       }
     });
