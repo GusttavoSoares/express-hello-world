@@ -60,8 +60,6 @@ app.post('/flow', async  (req, res) => {
   const screenDataObject = {
     screen: "CONFIRM_PAYMENT",
     data: {
-      extension_message_response: {
-        params: {
           flow_token: "flows-builder-2b739fc7", 
           fornecedor: "18288049000157",
           data_emissao: "2025",
@@ -72,8 +70,6 @@ app.post('/flow', async  (req, res) => {
           tipo_documento: "Boleto Bancário",
           numero_documento: "88723"
         }
-      }
-    }
   };
 
   //const screenData = JSON.stringify(screenDataObject);
