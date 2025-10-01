@@ -199,6 +199,18 @@ async function replyMessage(deliveryTo, messageId) {
     document_number: "88723",
   };
 
+  const flow_action_data = {
+  fornecedor: body.cnpj_cpf,
+  data_emissao: body.emission_date,
+  data_vencimento: body.expiration_date,
+  valor_original: body.original_value.toString(),
+  descontos: body.discount_value.toString(),
+  descricao: body.description,
+  tipo_documento: body.document_type,
+  numero_documento: body.document_number
+};
+
+
   try {
     await axios({
       method: 'post',
@@ -243,16 +255,7 @@ async function replyMessage(deliveryTo, messageId) {
                   type: "action", 
                   action: { 
                     flow_token: FLOW_EXTRACAO_PAGAMENTO_TOKEN, 
-                    flow_action_data: {
-                      fornecedor: body.cnpj_cpf,
-                      data_emissao: body.emission_date,
-                      data_vencimento: body.expiration_date,
-                      valor_original: body.original_value.toString(),
-                      descontos: body.discount_value.toString(),
-                      descricao: body.description,
-                      tipo_documento: body.document_type,
-                      numero_documento: body.document_number
-                    }
+                    flow_action_data: flow_action_data
                   }
                 }
               ]
