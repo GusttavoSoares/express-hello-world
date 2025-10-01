@@ -73,9 +73,7 @@ app.post('/flow', async  (req, res) => {
       }
   };
 
-  const screenData = {
-  response: JSON.stringify(screenDataObject)
-  };
+  const screenData = JSON.stringify(screenDataObject);
 
   res.send(encryptResponse(screenData, aesKeyBuffer, initialVectorBuffer));
 });
