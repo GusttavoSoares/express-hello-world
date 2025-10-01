@@ -58,24 +58,26 @@ app.post('/flow', async  (req, res) => {
   const incomingData = decryptedBody.data;
 
   const screenDataObject = {
+    response: {
       screen: {
         id: "CONFIRM_PAYMENT",
         data: {
           fornecedor: incomingData.fornecedor || "18288049000157",
-          data_emissao: incomingData.data_emissao || "2025",
-          data_vencimento: incomingData.data_vencimento || "2026",
+          data_emissao: incomingData.data_emissao || "24/09/2025",
+          data_vencimento: incomingData.data_vencimento || "24/09/2026",
           valor_original: incomingData.valor_original?.toString() || "550",
           descontos: incomingData.descontos?.toString() || "50",
-          descricao: incomingData.descricao || "Exemplo de descricao",
-          tipo_documento: incomingData.tipo_documento || "Boleto",
+          descricao: incomingData.descricao || "Exemplo de descrição",
+          tipo_documento: incomingData.tipo_documento || "Boleto Bancário",
           numero_documento: incomingData.numero_documento || "88723"
         }
       }
+    }
   };
 
-  const screenData = JSON.stringify(screenDataObject);
+  //const screenData = JSON.stringify(screenDataObject);
 
-  res.send(encryptResponse(screenData, aesKeyBuffer, initialVectorBuffer));
+  res.send(encryptResponse(screenDataObject, aesKeyBuffer, initialVectorBuffer));
 });
 
 const decryptRequest = (body, privatePem) => {
