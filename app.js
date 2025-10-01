@@ -195,7 +195,7 @@ async function SendMessage(deliveryTo, message) {
   }
 }
 
-async function send_flow(deliveryTo, messageId) {
+async function send_flow(deliveryTo) {
   const body = {
     cnpj_cpf: "18288049000157",
     emission_date: "24/09/2025",
@@ -207,19 +207,19 @@ async function send_flow(deliveryTo, messageId) {
     document_number: "88723",
   };
 
+  // Esses dados serão passados ao flow
   const flow_action_data = {
-  fornecedor: body.cnpj_cpf,
-  data_emissao: body.emission_date,
-  data_vencimento: body.expiration_date,
-  valor_original: body.original_value.toString(),
-  descontos: body.discount_value.toString(),
-  descricao: body.description,
-  tipo_documento: body.document_type,
-  numero_documento: body.document_number
-};
+    fornecedor: body.cnpj_cpf,
+    data_emissao: body.emission_date,
+    data_vencimento: body.expiration_date,
+    valor_original: body.original_value.toString(),
+    descontos: body.discount_value.toString(),
+    descricao: body.description,
+    tipo_documento: body.document_type,
+    numero_documento: body.document_number
+  };
 
-console.log(flow_action_data);
-    try {
+  try {
     await axios({
       method: 'post',
       url: `https://graph.facebook.com/v23.0/${META_PHONE_ID}/messages`,
@@ -227,59 +227,42 @@ console.log(flow_action_data);
         'Authorization': `Bearer ${META_ACCESS_TOKEN}`,
         'Content-Type': 'application/json'
       },
-     data: {
+      data: {
         messaging_product: "whatsapp",
-        recipient_type: "individual",
         to: deliveryTo,
-        type: "template",
-        template: {
-  name: "extracao_de_pagamento",
-  language: { code: "pt_BR" },
-  components: [
-    {
-      type: "body",
-      parameters: [
-        { type: "text", text: body.cnpj_cpf },           
-        { type: "text", text: body.emission_date },     
-        { type: "text", text: body.expiration_date },  
-        { type: "text", text: body.original_value.toString() }, 
-        { type: "text", text: body.discount_value.toString() }, 
-        { type: "text", text: body.description },        
-        { type: "text", text: body.document_type },      
-        { type: "text", text: body.document_number } 
-      ]
-    },
-    {
-      type: "button",
-      sub_type: "quick_reply",
-      index: "0",
-      parameters: [{ type: "payload", payload: "Confirmar" }]
-    },
-    {
-      type: "button",
-      sub_type: "flow",
-      index: "1",
-      parameters: [
-        {
-          type: "action",
+        type: "interactive",
+        interactive: {
+          type: "button",
+          body: {
+            text: "Deseja confirmar o pagamento?"
+          },
           action: {
-            //flow_token: 
-            flow_action_data: flow_action_data
+            buttons: [
+              {
+                type: "flow",
+                title: "Abrir Flow",
+                flow: {
+                  flow_token: FLOW_EXTRACAO_PAGAMENTO_TOKEN,
+                  flow_data: flow_action_data
+                }
+              },
+              {
+                type: "reply",
+                title: "Cancelar",
+                id: "cancelar"
+              }
+            ]
           }
         }
-      ]
-    }
-  ]
-},
-context: { message_id: messageId } // opcional, se estiver respondendo a uma mensagem
-    }
+      }
     });
 
-    console.log('Template com flow enviado com sucesso!');
+    console.log('Mensagem interativa com flow enviada com sucesso!');
   } catch (err) {
-    console.error('Erro ao enviar template com flow:', err.response?.data || err.message);
+    console.error('Erro ao enviar mensagem interativa com flow:', err.response?.data || err.message);
   }
 }
+
 
 
 // Função para responder com o template
