@@ -58,9 +58,11 @@ app.post('/flow', async  (req, res) => {
   const incomingData = decryptedBody.data;
 
   const screenDataObject = {
-      screen: {
-        id: "CONFIRM_PAYMENT",
-        data: {
+    screen: "CONFIRM_PAYMENT",
+    data: {
+      extension_message_response: {
+        params: {
+          flow_token: "flows-builder-2b739fc7", 
           fornecedor: "18288049000157",
           data_emissao: "2025",
           data_vencimento: "2026",
@@ -71,12 +73,13 @@ app.post('/flow', async  (req, res) => {
           numero_documento: "88723"
         }
       }
+    }
   };
 
-  const screenData = JSON.stringify(screenDataObject);
-  const strobj= JSON.parse(screenData);
+  //const screenData = JSON.stringify(screenDataObject);
+  //const strobj= JSON.parse(screenData);
 
-  res.send(encryptResponse(strobj, aesKeyBuffer, initialVectorBuffer));
+  res.send(encryptResponse(screenDataObject, aesKeyBuffer, initialVectorBuffer));
 });
 
 const decryptRequest = (body, privatePem) => {
