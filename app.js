@@ -10,6 +10,7 @@ dotenv.config();
 const META_ACCESS_TOKEN = process.env.META_ACCESS_TOKEN;
 const META_PHONE_ID = process.env.META_PHONE_ID;
 const PRIVATE_KEY_PATH = '/etc/secrets/private.pem';
+const FLOW_EXTRACAO_PAGAMENTO_TOKEN = process.env.FLOW_EXTRACAO_PAGAMENTO_TOKEN;
 
 const PRIVATE_KEY = crypto.createPrivateKey({
   key: fs.readFileSync(PRIVATE_KEY_PATH, 'utf8'),
@@ -232,6 +233,12 @@ async function replyMessage(deliveryTo, messageId) {
               sub_type: "quick_reply",
               index: 0,
               parameters: [{ type: "payload", payload: "Confirmar" }]
+            },
+            {
+              type: "button",
+              sub_type: "flow",
+              index: 1,
+              parameters: [{ type: "action", action: { flow_token: FLOW_EXTRACAO_PAGAMENTO_TOKEN, flow_action_data: {} } }]
             }
           ]
         },
