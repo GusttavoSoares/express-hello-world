@@ -49,26 +49,26 @@ app.post('/flow', async  (req, res) => {
     PRIVATE_KEY,
   );
 
-  const { screen, data, version, action } = decryptedBody;
-
-  // Return the next screen & data to the client
-  // const screenData = {
-  //   CONFIRM_PAYMENT: {
-  //     screen: "CONFIRM_PAYMENT",
-  //     data: {
-  //       fornecedor: "Fornecedor Exemplo",
-  //       data_emissao: "2025",
-  //       data_vencimento: "2025",
-  //       valor_original: "1000",
-  //       descontos: "50",
-  //       descricao: "Pagamento referente a servicos",
-  //       tipo_documento: "Boleto",
-  //       numero_documento: "12345"
-  //     }
-  //   }
-  // };
-
-  const screenData = { data: { status: "active" } };
+  //const { screen, data, version, action } = decryptedBody;
+  const incomingData = decryptedBody.data || {};
+  
+  const screenData = {
+    response: {
+      screen: {
+        id: "CONFIRM_PAYMENT",
+        data: {
+          fornecedor: incomingData.fornecedor || "18288049000157",
+          data_emissao: incomingData.data_emissao || "2025",
+          data_vencimento: incomingData.data_vencimento || "2026",
+          valor_original: incomingData.valor_original?.toString() || "550",
+          descontos: incomingData.descontos?.toString() || "50",
+          descricao: incomingData.descricao || "Exemplo de descricao",
+          tipo_documento: incomingData.tipo_documento || "Boleto",
+          numero_documento: incomingData.numero_documento || "88723"
+        }
+      }
+    }
+  };
 
   res.send(encryptResponse(screenData, aesKeyBuffer, initialVectorBuffer));
 });
