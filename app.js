@@ -150,14 +150,8 @@ app.post('/webhook', (req, res) => {
 
   const body = req.body;
 
-  const flowData = body?.entry?.[0]?.changes?.[0]?.value?.flows?.[0]?.data?.params;
+  console.log("enviando tudo", body);
 
-  if (flowData) {
-    console.log("Dados preenchidos pelo usuário:", flowData);
-  } else {
-    console.log("Nenhum flow recebido");
-  }
-  
 
   const entry = req.body.entry;
   if (!entry || entry.length === 0) return res.status(200).end();
