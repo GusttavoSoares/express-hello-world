@@ -238,10 +238,22 @@ async function replyMessage(deliveryTo, messageId) {
               type: "button",
               sub_type: "flow",
               index: 1,
-              parameters: [{ type: "action", action: { flow_token: FLOW_EXTRACAO_PAGAMENTO_TOKEN, flow_action_data: { body } } }]
-            }
-          ]
-        },
+              parameters: [
+                { 
+                type: "action", 
+                action: { 
+                  flow_token: FLOW_EXTRACAO_PAGAMENTO_TOKEN, 
+                  flow_action_data: {
+                    ...body, 
+                    original_value: body.original_value.toString(), 
+                    discount_value: body.discount_value.toString() 
+                  } 
+                } 
+              }
+            ]
+          }
+        ]
+      },
         context: { message_id: messageId }
       }
     });
