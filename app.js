@@ -210,14 +210,16 @@ async function send_flow(deliveryTo) {
 
   const flow_action_payload = {
     screen: "CONFIRM_PAYMENT",
-    fornecedor: body.cnpj_cpf,
-    data_emissao: body.emission_date,
-    data_vencimento: body.expiration_date,
-    valor_original: body.original_value.toString(),
-    descontos: body.discount_value.toString(),
-    descricao: body.description,
-    tipo_documento: body.document_type,
-    numero_documento: body.document_number
+    data: {
+      fornecedor: body.cnpj_cpf,
+      data_emissao: body.emission_date,
+      data_vencimento: body.expiration_date,
+      valor_original: body.original_value.toString(),
+      descontos: body.discount_value.toString(),
+      descricao: body.description,
+      tipo_documento: body.document_type,
+      numero_documento: body.document_number
+    }
   };
 
   try {
