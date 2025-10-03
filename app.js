@@ -160,7 +160,7 @@ app.post('/webhook', (req, res) => {
   if (messages && messages.length > 0) {
     messages.forEach(msg => {
       if (msg.type === 'image') {
-        send_flow(msg.from);
+        replyMessage(msg.from, msg.id);
       } else if (msg.type === 'button') {
         if (msg.button.payload === 'Confirmar') {
           SendMessage(msg.from, 'Dados confirmados! Obrigado.');
@@ -278,15 +278,18 @@ async function replyMessage(deliveryTo, messageId) {
   };
 
   const flow_action_data = {
-  fornecedor: body.cnpj_cpf,
-  data_emissao: body.emission_date,
-  data_vencimento: body.expiration_date,
-  valor_original: body.original_value.toString(),
-  descontos: body.discount_value.toString(),
-  descricao: body.description,
-  tipo_documento: body.document_type,
-  numero_documento: body.document_number
-};
+    screen: "CONFIRM_PAYMENT",
+    data: {
+      fornecedor: body.cnpj_cpf,
+      data_emissao: body.emission_date,
+      data_vencimento: body.expiration_date,
+      valor_original: body.original_value.toString(),
+      descontos: body.discount_value.toString(),
+      descricao: body.description,
+      tipo_documento: body.document_type,
+      numero_documento: body.document_number
+    }
+  };
 
 
   try {
