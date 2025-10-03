@@ -146,8 +146,14 @@ app.post('/webhook', (req, res) => {
 
   const body = req.body;
 
-  console.log("enviando tudo", body);
+  if (body.action === 'data_exchange') {
+    const dados = body.data;
+    console.log('Dados recebidos do Flow:', dados);
 
+    return res.json({
+      data: { message: "Pagamento registrado com sucesso!" }
+    });
+  }
 
   const entry = req.body.entry;
   if (!entry || entry.length === 0) return res.status(200).end();
