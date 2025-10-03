@@ -54,8 +54,8 @@ app.post('/flow', async  (req, res) => {
     return res.send(encryptResponse(healthResponse, aesKeyBuffer, initialVectorBuffer));
   }
 
-  //const { screen, data, version, action } = decryptedBody;
-  const incomingData = decryptedBody.data;
+  const { action, data: incomingData } = decryptedBody;
+  //const incomingData = decryptedBody.data;
 
   if (action === 'data_exchange' || (incomingData && incomingData.numero_documento)) {   
     const { 
