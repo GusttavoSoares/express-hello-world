@@ -57,25 +57,51 @@ app.post('/flow', async  (req, res) => {
   //const { screen, data, version, action } = decryptedBody;
   const incomingData = decryptedBody.data;
 
-  const screenDataObject = {
-    screen: "CONFIRM_PAYMENT",
-    data: {
-          flow_token: "flows-builder-2b739fc7", 
-          fornecedor: "18288049000157",
-          data_emissao: "2025",
-          data_vencimento: "2026",
-          valor_original: "550",
-          descontos: "50",
-          descricao: "Exemplo de descrição",
-          tipo_documento: "Boleto Bancário",
-          numero_documento: "88723"
-        }
-  };
+  if (action === 'data_exchange' || (incomingData && incomingData.numero_documento)) {   
+    const { 
+      fornecedor, 
+      data_emissao, 
+      data_vencimento, 
+      valor_original, 
+      descontos, 
+      descricao, 
+      tipo_documento, 
+      numero_documento 
+    } = incomingData; 
 
-  //const screenData = JSON.stringify(screenDataObject);
-  //const strobj= JSON.parse(screenData);
+    console.log(`Dados para processamento/salvamento:`);
+    console.log({ numero_documento, valor_original, fornecedor });
 
-  res.send(encryptResponse(screenDataObject, aesKeyBuffer, initialVectorBuffer));
+    const successResponse = {
+    data: { 
+        status: "success",
+        mensagem: `O documento ${numero_documento} foi processado com sucesso.` 
+    }
+    };
+    
+    return res.send(encryptResponse(successResponse, aesKeyBuffer, initialVectorBuffer));
+    } else {
+    
+    const screenDataObject = {
+      screen: "CONFIRM_PAYMENT",
+      data: {
+            flow_token: "flows-builder-2b739fc7", 
+            fornecedor: "18288049000157",
+            data_emissao: "2025",
+            data_vencimento: "2026",
+            valor_original: "550",
+            descontos: "50",
+            descricao: "Exemplo de descrição",
+            tipo_documento: "Boleto Bancário",
+            numero_documento: "88723"
+          }
+    };
+
+    //const screenData = JSON.stringify(screenDataObject);
+    //const strobj= JSON.parse(screenData);
+
+    res.send(encryptResponse(screenDataObject, aesKeyBuffer, initialVectorBuffer));
+}
 });
 
 const decryptRequest = (body, privatePem) => {
@@ -266,9 +292,6 @@ async function send_flow(deliveryTo) {
     console.error('Erro ao enviar flow interativo:', err.response?.data || err.message);
   }
 }
-
-
-
 
 // Função para responder com o template
 async function replyMessage(deliveryTo, messageId) {
